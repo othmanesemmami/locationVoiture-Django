@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Voitures</title>
+    <style>
+        /* Styles inclus comme avant */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            color: #333;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        #container {
+            margin: 0 auto;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        #output-section {
+            margin-top: 20px;
+        }
+
+        input[type="text"], button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .car-buttons button {
+            display: inline-block;
+            width: auto;
+            margin-right: 5px;
+        }
+
+        .main-menu-btn {
+            background-color: #28a745;
+            margin-top: 20px;
+        }
+
+        .main-menu-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>Liste des Voitures</h1>
+        </div>
+        <div id="search-section">
+            <form method="GET" action="">
+                <input type="text" name="q" placeholder="Rechercher par matricule ou marque">
+                <button type="submit">Rechercher</button>
+            </form>
+        </div>
+        <div id="output-section">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Matricule</th>
+                        <th>Marque</th>
+                        <th>Kilométrage</th>
+                        <th>Prix/Jour</th>
+                        <th>Disponibilité</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for car in cars %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ car.matricule }}</td>
+                        <td>{{ car.marque }}</td>
+                        <td>{{ car.kilometrage }}</td>
+                        <td>{{ car.prix_jours }}</td>
+                        <td>{{ car.disponibilite }}</td>
+                        <td class="car-buttons">
+                            <form action="{% url 'update_car' car.id %}" method="GET" style="display:inline;">
+                                <button type="submit">Update</button>
+                            </form>
+                            <form action="{% url 'delete_car' car.id %}" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <form action="{% url 'delete_all_cars' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Delete All</button>
+        </form>
+        
+        <button class="main-menu-btn" onclick="window.location.href='{% url 'main_menu' %}'">Revenir au menu principal</button>
+    </div>
+</body>
+</html>

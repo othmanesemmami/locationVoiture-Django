@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if car %}Modifier la Voiture{% else %}Créer une Voiture{% endif %}</title>
+    <style>
+     * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f0f0f0;
+    color: #333;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+#container {
+    margin: 0 auto;
+    max-width: 800px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="text"],
+select {
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#error {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+</style>
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>{% if car %}Modifier la Voiture{% else %}Créer une Voiture{% endif %}</h1>
+        </div>
+        {% if error_message %}
+            <div id="error">{{ error_message }}</div>
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <label for="matricule">Matricule:</label>
+            <input type="text" id="matricule" name="matricule" value="{{ car.matricule|default_if_none:'' }}">
+            
+            <label for="marque">Marque:</label>
+            <input type="text" id="marque" name="marque" value="{{ car.marque|default_if_none:'' }}">
+            
+            <label for="kilometrage">Kilométrage:</label>
+            <input type="number" id="kilometrage" name="kilometrage" value="{{ car.kilometrage|default_if_none:'' }}">
+            
+            <label for="prix_jours">Prix par Jour:</label>
+            <input type="number" id="prix_jours" name="prix_jours" value="{{ car.prix_jours|default_if_none:'' }}">
+            
+            <label for="disponibilite">Disponibilité:</label>
+            <select id="disponibilite" name="disponibilite">
+                <option value="parc" {% if car and car.disponibilite == "parc" %}selected{% endif %}>parc</option>
+                <option value="louer" {% if car and car.disponibilite == "louer" %}selected{% endif %}>louer</option>
+            </select>
+            
+            <button type="submit">{% if car %}Modifier{% else %}Créer{% endif %}</button>
+        </form>
+    </div>
+</body>
+</html>
